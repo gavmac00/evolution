@@ -1,35 +1,42 @@
 import random as r
+from typing import Sized
 
-worldSize = 100
+worldSize = 3
 worldSizeX = worldSize
 worldSizeY = worldSize
-startingPopulation = 5
+startingPopulation = 3
 genAmount = 5
 
+worldMapX = []
+worldMapY = []
+
 def evolute():
-    entry = input("Use preset world conditions (y/n): ")
-    if entry == 'n':
-        worldSize = input("New World Size: ")
-        worldSizeX = worldSize
-        worldSizeY = worldSize
-        startingPopulation = input("New Starting Polulaton Size: ")
-        genAmount = input("Number of Generations: ")
-    gen = 0
-    print("\nGeneration: " + str(gen))
+
+    for p in range(startingPopulation):
+        generateStartLocation(worldSize)
+
+    print("WorldMapX: " + str(worldMapX))
+    print("WorldMapY: " + str(worldMapY))
+
 
 # def sensoryInput():
 #     position = (cellX, cellY)
 #     checkSurroundings(position)
 
 def generateStartLocation(worldSize):
-    cellX = r.randint(1,worldSize)
-    cellY = r.randint(1,worldSize)
 
-    location = (cellX, cellY)  #tuple
+        cellX = r.randint(1,worldSize)
+        cellY = r.randint(1,worldSize)
 
-    # for playerNo in range(worldSize):
-        # location[0] = worldMapX
-    return location
+        if cellX == worldMapX:
+            generateStartLocation(worldSize)
+        else:
+            worldMapX.append(cellX)
+
+        if cellY == worldMapY:
+            generateStartLocation(worldSize)
+        else:
+            worldMapY.append(cellY)
 
 # def outputE():
 #     print("")
@@ -46,6 +53,6 @@ def generateStartLocation(worldSize):
 # def checkSurroundings(position):
 #     nearbyBlocks = {"nw","n","ne","e","se","s","sw","w"}
 #     # for x in nearbyBlocks:
-        
+
 evolute()
 #generateStartLocation(worldSize)
