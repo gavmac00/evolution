@@ -4,6 +4,9 @@ worldSize = 128
 startingPopulation = 5
 genAmount = 5
 
+occupiedX = []
+occupiedY = []
+
 class Pos:
     def __init__(self, locationX, locationY):
         self.locationX = locationX
@@ -12,11 +15,21 @@ class Pos:
     def currentLocation(self):
         return self.locationX, self.locationY
 
-class Lute:
-    def __init__(self, lifeStatus):
-        self.lifeStatus = lifeStatus
+    def storedLocations(self):
+        occupiedX.append(self.locationX)
+        occupiedY.append(self.locationY)
 
-    def getStatus(self):
+
+class Lute:
+    def __init__(self, ID, lifeStatus, location):
+        self.ID = ID
+        self.lifeStatus = lifeStatus
+        self.location = location
+
+    def store_ID(self):
+        return self.ID
+
+    def getLifeStatus(self):
         if self.lifeStatus == 1:
             return True
         else: return False
@@ -27,27 +40,21 @@ class NewWorld:
         self.worldSize = worldSize
         self.startingPopulation = startingPopulation
         self.genAmount = genAmount
-        self.lutes = []
 
-    def spawnThem(self, lute):
-        if len(self.lutes) < self.startingPopulation:
-            self.lutes.append(lute)
-            return True
-        return False
-
-l1 = Lute(1)
-l2 = Lute(1)
-l3 = Lute(0)
-
-lo1 = Pos(r.randint(1,worldSize),r.randint(1,worldSize))
-lo2 = Pos(r.randint(1,worldSize),r.randint(1,worldSize))
-lo3 = Pos(r.randint(1,worldSize),r.randint(1,worldSize))
+    def spawn():
+        p = 1
+        for l in range(0,startingPopulation):
+            lo = Pos(r.randint(1,worldSize),r.randint(1,worldSize))
+            l = Lute(p,r.randint(0,1),lo)
+            print(f"Lute: {str(p)}, Alive: {l.getLifeStatus()}, Location: {lo.currentLocation()}")
+            Pos.storedLocations(lo)
+            p = p + 1
 
 world = NewWorld(worldSize, startingPopulation, genAmount)
+NewWorld.spawn()
 
-print(f"Alive: {l1.getStatus()}, Location: {lo1.currentLocation()}")
-print(f"Alive: {l2.getStatus()}, Location: {lo2.currentLocation()}")
-print(f"Alive: {l3.getStatus()}, Location: {lo3.currentLocation()}")
+print(f"Occupied in X: {occupiedX}")
+print(f"Occupied in Y: {occupiedY}")
 
 
 
@@ -93,21 +100,3 @@ def generateStartLocation(worldSize):
         generateStartLocation(worldSize)
     else:
         worldMapY.append(cellY)
-
-# def outputE():
-#     print("")
-# def outputR():
-#     print("")
-# def brain():
-#     print("")
-
-# def spawn():
-
-
-
-
-# def checkSurroundings(position):
-#     nearbyBlocks = {"nw","n","ne","e","se","s","sw","w"}
-#     # for x in nearbyBlocks:
-
-evolute()
