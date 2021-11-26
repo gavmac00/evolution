@@ -3,100 +3,54 @@ import random as r
 worldSize = 128
 startingPopulation = 5
 genAmount = 5
-
 occupiedX = []
 occupiedY = []
+worldLifeStatus = []
 
 class Pos:
-    def __init__(self, locationX, locationY):
-        self.locationX = locationX
-        self.locationY = locationY
+    def __init__(P, locationX, locationY):
+        P.locationX = locationX
+        P.locationY = locationY
 
-    def currentLocation(self):
-        return self.locationX, self.locationY
+    def currentLocation(P):
+        return P.locationX, P.locationY
 
-    def storedLocations(self):
-        occupiedX.append(self.locationX)
-        occupiedY.append(self.locationY)
-
+    def storeLocation(P):
+        occupiedX.append(P.locationX)
+        occupiedY.append(P.locationY)
 
 class Lute:
-    def __init__(self, ID, lifeStatus, location):
-        self.ID = ID
-        self.lifeStatus = lifeStatus
-        self.location = location
+    def __init__(L, lifeStatus, location):
+        L.lifeStatus = lifeStatus
+        L.location = location
 
-    def store_ID(self):
-        return self.ID
-
-    def getLifeStatus(self):
-        if self.lifeStatus == 1:
-            return True
-        else: return False
+    def storeLifeStatus(L):
+        worldLifeStatus.append(L.lifeStatus)
 
 class NewWorld:
-
-    def __init__(self, worldSize, startingPopulation, genAmount):
-        self.worldSize = worldSize
-        self.startingPopulation = startingPopulation
-        self.genAmount = genAmount
-
     def spawn():
-        p = 1
+        count = 1
+        print("\n")
         for l in range(0,startingPopulation):
-            lo = Pos(r.randint(1,worldSize),r.randint(1,worldSize))
-            l = Lute(p,r.randint(0,1),lo)
-            print(f"Lute: {str(p)}, Alive: {l.getLifeStatus()}, Location: {lo.currentLocation()}")
-            Pos.storedLocations(lo)
-            p = p + 1
+            lo = Pos(r.randint(1,worldSize), r.randint(1,worldSize))
+            l = Lute(1,lo)
+            print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
+            Pos.storeLocation(lo)
+            Lute.storeLifeStatus(l)
+            count = count + 1
 
-world = NewWorld(worldSize, startingPopulation, genAmount)
 NewWorld.spawn()
 
-print(f"Occupied in X: {occupiedX}")
-print(f"Occupied in Y: {occupiedY}")
+# print(f"\nAll cells occupied in X: {occupiedX}")
+# print(f"All cells occupied in Y: {occupiedY}")
+print(f"\nWorldsize: {worldSize} x {worldSize}.")
+print(f"The starting population is {startingPopulation}.")
+print(f"In the population, the status of life is {worldLifeStatus}.\n")
 
+# print(f"There will be {genAmount} generations.\n")
 
-
-
-
-
-class World:
-    pass
-
-worldSize = 3
-worldSizeX = worldSize
-worldSizeY = worldSize
-startingPopulation = 3
-genAmount = 5
-
-worldMapX = []
-worldMapY = []
-
-def evolute():
-
-    for p in range(startingPopulation):
-        generateStartLocation(worldSize)
-
-    # print("WorldMapX: " + str(worldMapX))
-    # print("WorldMapY: " + str(worldMapY))
-
-
-# def sensoryInput():
-#     position = (cellX, cellY)
-#     checkSurroundings(position)
-
-def generateStartLocation(worldSize):
-
-    cellX = r.randint(1,worldSize)
-    cellY = r.randint(1,worldSize)
-
-    if cellX == worldMapX:
-        generateStartLocation(worldSize)
-    else:
-        worldMapX.append(cellX)
-
-    if cellY == worldMapY:
-        generateStartLocation(worldSize)
-    else:
-        worldMapY.append(cellY)
+# count = 1
+# while count < 6:
+#     ID = input(f"Query a Lute number's coordiantes: (Enter a number): ")
+#     ID = int(ID)
+#     print(f"({occupiedX[ID-1]},{occupiedY[ID-1]})")
