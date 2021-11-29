@@ -1,14 +1,5 @@
 import random as r
 
-worldSize = 128
-startingPopulation = 5
-alive = startingPopulation
-population = alive
-genAmount = 5
-occupiedX = []
-occupiedY = []
-worldLifeStatus = []
-
 class Pos:
     def __init__(P, locationX, locationY):
         P.locationX = locationX
@@ -21,8 +12,28 @@ class Pos:
         occupiedX.append(P.locationX)
         occupiedY.append(P.locationY)
 
-    # def move(location): ######
+    def move():
+        for i in range(0, World.living()):
+            #take in location (done)
+            #check neighbours (done)
+            #choose where to go
+            #go
+            X = occupiedX[i] #taking in location
+            Y = occupiedY[i]
+            neighbours = Pos.checkNeighbours(X,Y) # getting each lute's neighbours
+            print(f"{i+1}: Neighbours: {neighbours}")
 
+    def checkNeighbours(X,Y):
+        ### check boundary condition
+        neighbourList = []
+        for x in range(X-1,X+1):
+            for y in range(Y-1,Y+1):
+                if y in occupiedY & y != Y:
+                    if x in occupiedX & x != X:
+                        coordinate = "(" + str(occupiedX[x]) + "," + str(occupiedY[y]) + ")" #not tested yets
+                        neighbourList.append(coordinate)
+
+        return neighbourList
 
 class Lute:
     def __init__(L, lifeStatus, location):
@@ -35,7 +46,7 @@ class Lute:
 class NewWorld:
     def spawn():
         count = 1
-        for l in range(0,startingPopulation):
+        for l in range(0, startingPopulation):
             lo = Pos(r.randint(1,worldSize), r.randint(1,worldSize))
             l = Lute(1,lo)
             print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
@@ -58,15 +69,12 @@ class World:
     def nextGen(gen):        
         print(f"\nGeneration: {gen}\n")
         if gen <= genAmount:
+            Pos.move()
             userOuput.QDataRequest()
             userOuput.QLocationRequest()
             userOuput.QKillRequest()
 
 class userOuput:
-
-    def __init__(U):
-        pass
-
     def QDataRequest():
         outputDataRequest = input(f"Output Data? (Y/N): ")
         if outputDataRequest == "Y":
@@ -99,6 +107,9 @@ def facilitateLocationRequest():
         ID = int(ID)
         print(f"Coordinates of Lute {ID}: ({occupiedX[ID-1]},{occupiedY[ID-1]})\n")
         count += 1
+        if count < World.living():
+            exitRequest = input(f"Query another? (Y/N): ")
+            if exitRequest == "N": break
 
 def facilitateKillRequest(alive):
     while alive > 0:
@@ -110,6 +121,20 @@ def facilitateKillRequest(alive):
         if alive > 0:
             exitRequest = input(f"\nKill another? (Y/N): ")
             if exitRequest == "N": break
+
+#######################
+occupiedX = []
+occupiedY = []
+worldLifeStatus = []
+
+worldSize = input("Set world size: ")
+startingPopulation = input("Set starting population: ")
+genAmount = input("Set the number of generations: ")
+
+worldSize = int(worldSize)
+startingPopulation = int(startingPopulation)
+genAmount = int(genAmount)
+alive = startingPopulation
 
 print(f"\nWorldsize: {worldSize} x {worldSize}.")
 print(f"The population is {startingPopulation}.")
