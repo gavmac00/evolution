@@ -3,7 +3,7 @@ import random as r
 worldSize = 128
 startingPopulation = 5
 alive = startingPopulation
-killed = startingPopulation - alive
+population = alive
 genAmount = 5
 occupiedX = []
 occupiedY = []
@@ -95,14 +95,14 @@ class userOuput:
 def facilitateLocationRequest():
     count = 0
     while count < startingPopulation:
-        ID = input(f"Query a Lute number's coordiantes: (Enter a number between 1 and {startingPopulation}): ")
+        ID = input(f"Query a Lute number's coordiantes: (Enter a number between 1 and {World.living()}): ")
         ID = int(ID)
         print(f"Coordinates of Lute {ID}: ({occupiedX[ID-1]},{occupiedY[ID-1]})\n")
         count += 1
 
 def facilitateKillRequest(alive):
     while alive > 0:
-        ID = input(f"Enter the Lutes ID (Between 1 and {alive}): ")
+        ID = input(f"Enter the Lutes ID (Between 1 and {World.living()}): ")
         ID = int(ID)
         World.kill(ID)
         alive =- 1
@@ -110,7 +110,6 @@ def facilitateKillRequest(alive):
         if alive > 0:
             exitRequest = input(f"\nKill another? (Y/N): ")
             if exitRequest == "N": break
-
 
 print(f"\nWorldsize: {worldSize} x {worldSize}.")
 print(f"The population is {startingPopulation}.")
