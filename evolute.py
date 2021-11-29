@@ -2,6 +2,8 @@ import random as r
 
 worldSize = 128
 startingPopulation = 5
+alive = startingPopulation
+killed = startingPopulation - alive
 genAmount = 5
 occupiedX = []
 occupiedY = []
@@ -19,6 +21,9 @@ class Pos:
         occupiedX.append(P.locationX)
         occupiedY.append(P.locationY)
 
+    # def move(location): ######
+
+
 class Lute:
     def __init__(L, lifeStatus, location):
         L.lifeStatus = lifeStatus
@@ -30,7 +35,6 @@ class Lute:
 class NewWorld:
     def spawn():
         count = 1
-        print("\n")
         for l in range(0,startingPopulation):
             lo = Pos(r.randint(1,worldSize), r.randint(1,worldSize))
             l = Lute(1,lo)
@@ -40,47 +44,81 @@ class NewWorld:
             count = count + 1
 
 class World:
-    def __init__(W, ID):
-        W.ID = ID
-    
     def living():
-        alive = 0
-        for l in worldLifeStatus:
-            if worldLifeStatus[l] == 1:
-                alive +=1
-        print(f"\nCurrently Living: {alive}/{startingPopulation} lutes.")
+        alive = len(worldLifeStatus)
+        return alive
 
     def kill(ID):
-        del(occupiedX[ID-1])
-        del(occupiedY[ID-1])
-        worldLifeStatus[ID-1] = 0
+        IDX = ID-1
+        del(occupiedX[IDX])
+        del(occupiedY[IDX])
+        del(worldLifeStatus[IDX])
+        print(f"Lute {ID} killed.")
 
-NewWorld.spawn()
-World.living()
+    def nextGen(gen):        
+        print(f"\nGeneration: {gen}\n")
+        if gen <= genAmount:
+            userOuput.QDataRequest()
+            userOuput.QLocationRequest()
+            userOuput.QKillRequest()
 
-print(f"\nAll cells occupied in X: {occupiedX}")
-print(f"All cells occupied in Y: {occupiedY}")
-print(f"\nWorldsize: {worldSize} x {worldSize}.")
-print(f"The starting population is {startingPopulation}.")
-print(f"In the population, the status of life is {worldLifeStatus}.\n")
+class userOuput:
 
-print(f"There will be {genAmount} generations.\n")
+    def __init__(U):
+        pass
 
-locationRequest = input(f"Want to query a lutes location? (Y/N): ")
-if locationRequest == "Y":
+    def QDataRequest():
+        outputDataRequest = input(f"Output Data? (Y/N): ")
+        if outputDataRequest == "Y":
+            userOuput.Data()
+
+    def Data():
+        alive = World.living()
+        if alive > 0:
+            print(f"\nCurrently Living: {alive}/{startingPopulation} lutes.")
+            # print(f"In the population, the status of life is {worldLifeStatus}.")
+            print(f"All cells occupied in X: {occupiedX}")
+            print(f"All cells occupied in Y: {occupiedY}")
+        else:
+            print(f"\nCurrently Living: {alive}/{startingPopulation} lutes.")
+
+    def QLocationRequest():
+        locationRequest = input(f"Query Lute locations? (Y/N): ")
+        if locationRequest == "Y":
+            facilitateLocationRequest()
+
+    def QKillRequest():
+        killRequest = input(f"Want to kill any? (Y/N): ")
+        if killRequest == "Y":
+            facilitateKillRequest(alive)
+
+def facilitateLocationRequest():
     count = 0
     while count < startingPopulation:
         ID = input(f"Query a Lute number's coordiantes: (Enter a number between 1 and {startingPopulation}): ")
         ID = int(ID)
-        print(f"({occupiedX[ID-1]},{occupiedY[ID-1]})")
+        print(f"Coordinates of Lute {ID}: ({occupiedX[ID-1]},{occupiedY[ID-1]})\n")
         count += 1
 
-killRequest = input(f"Want to kill any? (Y/N): ")
-if killRequest == "Y":
-    ID = input(f"Enter the Lutes ID (Between 1 and {startingPopulation}): ")
-    ID = int(ID)
-    World.kill(ID)
-    print(f"\nAll cells occupied in X: {occupiedX}")
-    print(f"All cells occupied in Y: {occupiedY}")
-    print(f"In the population, the status of life is {worldLifeStatus}.\n")
-    World.living()
+def facilitateKillRequest(alive):
+    while alive > 0:
+        ID = input(f"Enter the Lutes ID (Between 1 and {alive}): ")
+        ID = int(ID)
+        World.kill(ID)
+        alive =- 1
+        userOuput.QDataRequest()
+        if alive > 0:
+            exitRequest = input(f"\nKill another? (Y/N): ")
+            if exitRequest == "N": break
+
+
+print(f"\nWorldsize: {worldSize} x {worldSize}.")
+print(f"The population is {startingPopulation}.")
+print(f"There will be {genAmount} generations.\n")
+
+NewWorld.spawn()
+
+for gen in range(1, genAmount+1):
+    World.nextGen(gen)
+
+print("Simulation Complete")
