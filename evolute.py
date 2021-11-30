@@ -20,19 +20,38 @@ class Pos:
             #go
             X = occupiedX[i] #taking in location
             Y = occupiedY[i]
-            neighbours = Pos.checkNeighbours(X,Y) # getting each lute's neighbours
+            neighbours = Pos.checkNeighbours(i,X,Y) # getting each lute's neighbours
             print(f"{i+1}: Neighbours: {neighbours}")
 
-    def checkNeighbours(X,Y):
-        ### check boundary condition
+    def checkNeighbours(i,X,Y):
         neighbourList = []
-        for x in range(X-1,X+1):
-            for y in range(Y-1,Y+1):
-                if y in occupiedY & y != Y:
-                    if x in occupiedX & x != X:
-                        coordinate = "(" + str(occupiedX[x]) + "," + str(occupiedY[y]) + ")" #not tested yets
-                        neighbourList.append(coordinate)
-
+        #boundary conditions & supplementary computation
+        if X == 1: # left wall, no neighbours on the left, only cells 2-5
+            if Y + 1 in occupiedY:
+                print(f"There is a lute in row: Y = {Y+1}, which is one row above the lute in ({X},{Y})")
+                print(f"Will now check if it is a neighbour...")
+                z = occupiedY.index(Y+1)
+                if occupiedX[z] == X:
+                    print(f"There is a neighbour, above the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
+                    neighbourList.append(f"({occupiedX[z]},{Y+1})")
+                elif occupiedX[z] == X+1:
+                    print(f"There is a neighbour, above and right one cell from the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
+                    neighbourList.append(f"({occupiedX[z]},{Y+1})")
+                else:
+                    print(f"There was lute in the row above, but it was not a neighbour.")
+                    print(f"The lute mentioned was in cell ({occupiedX[z]},{occupiedY[z]})")
+            else: # can move on to cell 3
+                for s in range(0,i-1): #check all slots prior to indexed co-ordinate
+                    if occupiedY[s] == Y:
+                        print(f"There is another lute along the row of the given lute, row {Y}")
+                        print(f"Checking if it is a neighbour...")
+                        q = occupiedY.index(Y)
+                        if occupiedX[q] == X+1:
+                            print(f"There is a neighbour to the right of lute ({X},{Y}) in the cell: ({occupiedX[q]},{Y})")
+                            neighbourList.append(f"({occupiedX[q]},{Y})")
+                        else:
+                            print(f"There was lute in the same row, but it was not a neighbour.")
+                            print(f"The lute mentioned was in cell ({occupiedX[q]},{occupiedY[q]})")
         return neighbourList
 
 class Lute:
@@ -47,12 +66,16 @@ class NewWorld:
     def spawn():
         count = 1
         for l in range(0, startingPopulation):
-            lo = Pos(r.randint(1,worldSize), r.randint(1,worldSize))
-            l = Lute(1,lo)
-            print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
-            Pos.storeLocation(lo)
-            Lute.storeLifeStatus(l)
-            count = count + 1
+            X = r.randint(1,worldSize)
+            Y = r.randint(1,worldSize)
+            for i in range(len(occupiedX)):
+                if X != occupiedX[i] & Y != occupiedY[i]:
+                    lo = Pos(X,Y)
+                    l = Lute(1,lo)
+                    print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
+                    Pos.storeLocation(lo)
+                    Lute.storeLifeStatus(l)
+                    count = count + 1
 
 class World:
     def living():
@@ -70,9 +93,9 @@ class World:
         print(f"\nGeneration: {gen}\n")
         if gen <= genAmount:
             Pos.move()
-            userOuput.QDataRequest()
-            userOuput.QLocationRequest()
-            userOuput.QKillRequest()
+            # userOuput.QDataRequest()
+            # userOuput.QLocationRequest()
+            # userOuput.QKillRequest()
 
 class userOuput:
     def QDataRequest():
