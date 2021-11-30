@@ -65,21 +65,23 @@ class Lute:
 class NewWorld:
     def spawn():
         count = 1
-        for l in range(0, startingPopulation):
-            X = r.randint(1,worldSize)
-            Y = r.randint(1,worldSize)
-            if NewWorld.checkReplica(X,Y) == True:
-                print("Found a replica")
-            elif len(occupiedY) == startingPopulation:
-                break
-            else:
-                lo = Pos(X,Y)
-                l = Lute(1,lo)
-                print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
-                Pos.storeLocation(lo)
-                Lute.storeLifeStatus(l)
-                count = count + 1
-        print(f"count: {count}")
+        while count != startingPopulation + 1:
+            for l in range(0, startingPopulation):
+                X = r.randint(1,worldSize)
+                Y = r.randint(1,worldSize)
+                if NewWorld.checkReplica(X,Y) == True:
+                    #print("Found a replica")
+                    pass
+                elif len(occupiedY) == startingPopulation:
+                    break
+                else:
+                    lo = Pos(X,Y)
+                    l = Lute(1,lo)
+                    print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
+                    Pos.storeLocation(lo)
+                    Lute.storeLifeStatus(l)
+                    count = count + 1
+            #print(f"count: {count}")
 
     def checkReplica(X,Y):
         for s in range(0,len(occupiedX)):
