@@ -26,7 +26,7 @@ class Pos:
     def checkNeighbours(i,X,Y):
         neighbourList = []
         #boundary conditions & supplementary computation
-        if X == 1: # left wall, no neighbours on the left, only cells 2-5
+        if X == 1: # left wall, no neighbours on the left, only cells 2-6
             if Y + 1 in occupiedY:
                 print(f"There is a lute in row: Y = {Y+1}, which is one row above the lute in ({X},{Y})")
                 print(f"Will now check if it is a neighbour...")
@@ -40,8 +40,8 @@ class Pos:
                 else:
                     print(f"There was lute in the row above, but it was not a neighbour.")
                     print(f"The lute mentioned was in cell ({occupiedX[z]},{occupiedY[z]})")
-            else: # can move on to cell 3
-                for s in range(0,i-1): #check all slots prior to indexed co-ordinate
+            else:
+                for s in range(0,i-1):
                     if occupiedY[s] == Y:
                         print(f"There is another lute along the row of the given lute, row {Y}")
                         print(f"Checking if it is a neighbour...")
@@ -68,14 +68,24 @@ class NewWorld:
         for l in range(0, startingPopulation):
             X = r.randint(1,worldSize)
             Y = r.randint(1,worldSize)
-            for i in range(len(occupiedX)):
-                if X != occupiedX[i] & Y != occupiedY[i]:
-                    lo = Pos(X,Y)
-                    l = Lute(1,lo)
-                    print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
-                    Pos.storeLocation(lo)
-                    Lute.storeLifeStatus(l)
-                    count = count + 1
+            if NewWorld.checkReplica(X,Y) == True:
+                print("Found a replica")
+            elif len(occupiedY) == startingPopulation:
+                break
+            else:
+                lo = Pos(X,Y)
+                l = Lute(1,lo)
+                print(f"Lute: {count}, Alive: True, Location: {lo.currentLocation()}")
+                Pos.storeLocation(lo)
+                Lute.storeLifeStatus(l)
+                count = count + 1
+        print(f"count: {count}")
+
+    def checkReplica(X,Y):
+        for s in range(0,len(occupiedX)):
+            if occupiedX[s] == X and occupiedY[s] == Y:
+                return True
+        return False
 
 class World:
     def living():
