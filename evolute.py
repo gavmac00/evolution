@@ -25,6 +25,7 @@ class Pos:
 
     def checkNeighbours(i,X,Y):
         neighbourList = []
+        print(f"i: {i}")
         #boundary conditions & supplementary computation
         if X == 1: # left wall, no neighbours on the left, only cells 2-6
             if Y + 1 in occupiedY:
@@ -32,10 +33,10 @@ class Pos:
                 print(f"Will now check if it is a neighbour...")
                 z = occupiedY.index(Y+1)
                 if occupiedX[z] == X:
-                    print(f"There is a neighbour, above the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
+                    print(f"There is a neighbour above the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
                     neighbourList.append(f"({occupiedX[z]},{Y+1})")
                 elif occupiedX[z] == X+1:
-                    print(f"There is a neighbour, above and right one cell from the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
+                    print(f"There is a neighbour above and right one cell from the lute ({X},{Y}) in the cell: ({occupiedX[z]},{Y+1})")
                     neighbourList.append(f"({occupiedX[z]},{Y+1})")
                 else:
                     print(f"There was lute in the row above, but it was not a neighbour.")
@@ -43,7 +44,7 @@ class Pos:
             else:
                 for s in range(0,i-1):
                     if occupiedY[s] == Y:
-                        print(f"There is another lute along the row of the given lute, row {Y}")
+                        print(f"There is another lute, along the row of the given lute, row {Y}")
                         print(f"Checking if it is a neighbour...")
                         q = occupiedY.index(Y)
                         if occupiedX[q] == X+1:
@@ -52,6 +53,9 @@ class Pos:
                         else:
                             print(f"There was lute in the same row, but it was not a neighbour.")
                             print(f"The lute mentioned was in cell ({occupiedX[q]},{occupiedY[q]})")
+        
+        if Y == 1:# bottom wall, no neighbours below, only cells 8-4
+            pass
         return neighbourList
 
 class Lute:
